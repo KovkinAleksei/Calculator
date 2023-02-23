@@ -1,4 +1,4 @@
 <resources>
     <string name="app_name">Calculator</string>
-    <string name="result">2345,003</string>
+    <string name="result">0</string>
 </resources>
