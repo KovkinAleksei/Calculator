@@ -123,5 +123,10 @@ class MainActivity : AppCompatActivity() {
         binding.eraseButton.setOnClickListener {
             binding.result.text = calculation.erase(binding.result.text.toString())
         }
+
+        // Нажатие на кнопку ,
+        binding.commaButton.setOnClickListener {
+            binding.result.text = calculation.addComma()
+        }
     }
 }
