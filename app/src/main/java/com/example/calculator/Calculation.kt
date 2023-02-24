@@ -41,6 +41,9 @@ class Calculation {
             return resultParts[0]
 
         // Вывод числа с дробной частью, укороченной до длины числа в 9 символов
+        if (strResult.length < 9)
+            return strResult
+
         if (strResult[8] != ',')
             return strResult.removeRange(9..strResult.length - 1)
 
@@ -108,7 +111,7 @@ class Calculation {
     fun changeSign() : String {
         // Смена знака последнего введённого числа
         if (currentNumber != "") {
-            currentNumber = (currentNumber.toInt() * (-1)).toString()
+            currentNumber = doubleToString(currentNumber.toDouble() * (-1))
 
             if (operation == "=")
                 result *= -1
@@ -152,5 +155,43 @@ class Calculation {
 
         // Вывод результата
         return showResult()
+    }
+
+    // Удаление последнего символа
+    fun erase(resultString : String) : String {
+        // Удаление последней оставшейся цифры
+        if (resultString.length == 1 || (resultString.length == 2 && resultString[0] == '-')) {
+            currentNumber = "0"
+
+            if (operation == "=")
+                result = 0.0
+
+            return currentNumber
+        }
+
+        // Удаление последней цифры вводимого числа
+        if (currentNumber != "" && operation != "=") {
+            currentNumber = currentNumber.removeRange(currentNumber.length - 1..currentNumber.length - 1)
+            return currentNumber
+        }
+
+        // Удаление знака операции
+        else if (operation != "=" && operation != "" && !resultString[resultString.length - 1].isDigit()) {
+            operation = "="
+            return doubleToString(result)
+        }
+
+        // Удаление последней цифры выведенного результата
+        else if (doubleToString(result) != "0") {
+            var strResult = doubleToString(result)
+            var newResult = strResult.removeRange(strResult.length - 1..strResult.length - 1)
+
+            if (newResult[newResult.length - 1] == '.')
+                 newResult = strResult.removeRange(strResult.length - 1..strResult.length - 1)
+
+            result = newResult.toDouble()
+        }
+
+        return doubleToString(result)
     }
 }

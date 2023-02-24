@@ -118,5 +118,10 @@ class MainActivity : AppCompatActivity() {
         binding.percentButton.setOnClickListener {
             binding.result.text = calculation.getPercent()
         }
+
+        // Нажатие на кнопку удаления последнего символа
+        binding.eraseButton.setOnClickListener {
+            binding.result.text = calculation.erase(binding.result.text.toString())
+        }
     }
 }
