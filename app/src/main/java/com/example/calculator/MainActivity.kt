@@ -113,5 +113,10 @@ class MainActivity : AppCompatActivity() {
         binding.plusMinusButton.setOnClickListener {
             binding.result.text = calculation.changeSign()
         }
+
+        // Нажатие на кнопку процента
+        binding.percentButton.setOnClickListener {
+            binding.result.text = calculation.getPercent()
+        }
     }
 }

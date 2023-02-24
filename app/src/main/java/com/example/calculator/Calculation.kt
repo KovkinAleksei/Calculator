@@ -132,4 +132,25 @@ class Calculation {
         // Пропуск нажатия кнопки
         return doubleToString(result) + operation
     }
+
+    // Взятие процента от числа
+    fun getPercent() : String {
+        // Пропуск взятия процента, если не было введено предыдущее или текущее число
+        if (prevNumber == "" || currentNumber == "") {
+            if (operation != "=")
+                return doubleToString(result) + operation
+
+            return doubleToString(result)
+        }
+
+        // Умножение или деление результата на процент
+        currentNumber = (currentNumber.toDouble() * 0.01).toString()
+
+        // Сложение или вычитание результата и процента
+        if (operation == "-" || operation == "+")
+            currentNumber = (currentNumber.toDouble() * result).toString()
+
+        // Вывод результата
+        return showResult()
+    }
 }
