@@ -124,7 +124,7 @@ class MainActivity : AppCompatActivity() {
             binding.result.text = calculation.erase(binding.result.text.toString())
         }
 
-        // Нажатие на кнопку ,
+        // Нажатие на кнопку разделения целой и дробной части числа
         binding.commaButton.setOnClickListener {
             binding.result.text = calculation.addComma()
         }

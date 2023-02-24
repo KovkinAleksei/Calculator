@@ -1,10 +1,18 @@
 package com.example.calculator
 
+import kotlin.math.abs
+
 class Calculation {
     private var result = 0.0
     private var prevNumber = ""
     private var currentNumber = "0"
     private var operation = ""
+    private var hasError = false
+
+    // Сообщение об ошибке
+    companion object {
+        val ERROR_MESSAGE = "error"
+    }
 
     // Перевод Double в String для вывода результата
     private fun doubleToString(result: Double) : String {
@@ -17,8 +25,10 @@ class Calculation {
         val resultParts = strResult.split('.')
 
         // Ошибка вывода слишком длинного числа
-        if (resultParts[0].length > 9 || result > 999999999)
-            return "error"
+        if (resultParts[0].length > 9 || abs(result) > 999999999) {
+            hasError = true
+            return ERROR_MESSAGE
+        }
 
         // Удаление лишней дробной части
         if (strResult.length > 9) {
@@ -37,6 +47,10 @@ class Calculation {
 
     // Приписывание цифры в конец числа
     fun addDigit(digit: String) : String {
+        // Отмена действий при вознокновении ошибки
+        if (hasError)
+            reset()
+
         // Удаление незначащих нулей
         if (currentNumber == "0")
             currentNumber = ""
@@ -56,6 +70,10 @@ class Calculation {
         // Нахождение результата вычисления
         getResult(this.operation)
 
+        // Вывод сообщения об ошибке
+        if (hasError)
+            return ERROR_MESSAGE
+
         // Вывод выбранной операции
         this.operation = operation
 
@@ -70,11 +88,17 @@ class Calculation {
 
     // Добавление разделителя целой и дробной части
     fun addComma() : String {
+        // Вывод сообщения об ошибке
+        if (hasError)
+            return ERROR_MESSAGE
+
+        // Добавление разделителя
         if (currentNumber != "" && currentNumber.split('.').count() == 1) {
             currentNumber += '.'
             return currentNumber
         }
 
+        // Пропуск добавления разделителя
         if (operation != "=" && operation != "")
             return doubleToString(result) + operation
 
@@ -91,8 +115,8 @@ class Calculation {
             return
         }
 
-        if (currentNumber == "0" && operation == "÷")
-            result = 0.0
+        if ((currentNumber == "0" || currentNumber == "0.0") && operation == "÷")
+            hasError = true
         else if (currentNumber != "" && operation != "=") {
             result = when (operation) {
                 "+" -> result + currentNumber.toDouble()
@@ -106,9 +130,15 @@ class Calculation {
 
     // Вывод результата
     fun showResult() : String {
+        // Выполнение операции
         getResult(operation)
-        operation = "="
 
+        // Вывод сообщения об ошибке
+        if (hasError)
+            return ERROR_MESSAGE
+
+        // Вывод результата
+        operation = "="
         currentNumber=doubleToString(result)
 
         return doubleToString(result)
@@ -120,12 +150,17 @@ class Calculation {
         prevNumber = ""
         currentNumber = "0"
         operation = ""
+        hasError = false
 
         return currentNumber
     }
 
     // Смена знака введённого числа или операции
     fun changeSign() : String {
+        // Вывод сообщения об ошибке
+        if (hasError)
+            return ERROR_MESSAGE
+
         // Смена знака последнего введённого числа
         if (currentNumber != "") {
             currentNumber = doubleToString(currentNumber.toDouble() * (-1))
@@ -155,6 +190,10 @@ class Calculation {
 
     // Взятие процента от числа
     fun getPercent() : String {
+        // Вывод сообщения об ошибке
+        if (hasError)
+            return ERROR_MESSAGE
+
         // Пропуск взятия процента, если не было введено предыдущее или текущее число
         if (prevNumber == "" || currentNumber == "") {
             if (operation != "=")
@@ -176,6 +215,11 @@ class Calculation {
 
     // Удаление последнего символа
     fun erase(resultString : String) : String {
+        // Отмена действий при возникновении ошибки
+        if (hasError) {
+            return reset()
+        }
+
         // Удаление последней оставшейся цифры
         if (resultString.length == 1 || (resultString.length == 2 && resultString[0] == '-')) {
             currentNumber = "0"
