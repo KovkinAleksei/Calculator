@@ -8,6 +8,8 @@ class Calculation {
     private var currentNumber = "0"
     private var operation = ""
     private var hasError = false
+    private var resultIsPrinted = false
+    public var memoryString = ""
 
     // Сообщение об ошибке
     companion object {
@@ -49,6 +51,12 @@ class Calculation {
 
     // Приписывание цифры в конец числа
     fun addDigit(digit: String) : String {
+        // Стререть строку с сохранённым вводом при введении нового выражения
+        if (resultIsPrinted) {
+            memoryString = ""
+            resultIsPrinted = false
+        }
+
         // Отмена действий при вознокновении ошибки
         if (hasError)
             reset()
@@ -87,11 +95,21 @@ class Calculation {
             currentNumber = ""
         }
 
+        // Обновление строки, запоминающей ввод
+        memoryString = doubleToString(result) + " " + operation
+        resultIsPrinted = false
+
        return doubleToString(result) + operation
     }
 
     // Добавление разделителя целой и дробной части
     fun addComma() : String {
+        // Обновление строки, запоминающей ввод
+        if (resultIsPrinted) {
+            memoryString = ""
+            resultIsPrinted = false
+        }
+
         // Вывод сообщения об ошибке
         if (hasError)
             return ERROR_MESSAGE
@@ -137,6 +155,16 @@ class Calculation {
 
     // Вывод результата
     fun showResult() : String {
+        // Обновление строки, запоминающей ввод
+        if (operation != "=" && operation != "" && currentNumber != "") {
+            memoryString = doubleToString(result) + " " + operation + " " + currentNumber + " = "
+            resultIsPrinted = true
+        }
+        else if (!resultIsPrinted) {
+            memoryString = doubleToString(result) + " ="
+            resultIsPrinted = true
+        }
+
         // Выполнение операции
         getResult(operation)
 
@@ -158,6 +186,7 @@ class Calculation {
         currentNumber = "0"
         operation = ""
         hasError = false
+        memoryString = ""
 
         return currentNumber
     }
@@ -167,6 +196,12 @@ class Calculation {
         // Вывод сообщения об ошибке
         if (hasError)
             return ERROR_MESSAGE
+
+        // Обновление строки, запоминающей ввод
+        if (resultIsPrinted && result != 0.0) {
+            memoryString = ""
+            resultIsPrinted = false
+        }
 
         // Смена знака последнего введённого числа
         if (currentNumber != "") {
@@ -182,12 +217,14 @@ class Calculation {
         // Смена знака последней введённой операции
         if (operation == "-") {
             operation = "+"
+            memoryString = doubleToString(result) + " " + operation
 
             return doubleToString(result) + operation
         }
 
         if (operation == "+") {
             operation = "-"
+            memoryString = doubleToString(result) + " " + operation
 
             return doubleToString(result) + operation
         }
@@ -215,11 +252,13 @@ class Calculation {
 
         // Умножение или деление результата на процент
         currentNumber = currentNumber.replace(',', '.')
-        currentNumber = (currentNumber.toDouble() * 0.01).toString()
+        currentNumber = doubleToString(currentNumber.toDouble() * 0.01)
 
         // Сложение или вычитание результата и процента
-        if (operation == "-" || operation == "+")
-            currentNumber = (currentNumber.toDouble() * result).toString()
+        if (operation == "-" || operation == "+") {
+            currentNumber = currentNumber.replace(',', '.')
+            currentNumber = doubleToString(currentNumber.toDouble() * result)
+        }
 
         // Вывод результата
         return showResult()
@@ -227,6 +266,12 @@ class Calculation {
 
     // Удаление последнего символа
     fun erase(resultString : String) : String {
+        // Обновление строки, запоминающей ввод
+        if (resultIsPrinted) {
+            memoryString = ""
+            resultIsPrinted = false
+        }
+
         // Отмена действий при возникновении ошибки
         if (hasError) {
             return reset()
@@ -265,6 +310,12 @@ class Calculation {
         // Удаление знака операции
         else if (operation != "=" && operation != "" && !resultString[resultString.length - 1].isDigit()) {
             operation = "="
+            currentNumber = doubleToString(result)
+
+            // Обновление строки, запоминающей ввод
+            memoryString = ""
+            resultIsPrinted = false
+
             return doubleToString(result)
         }
 

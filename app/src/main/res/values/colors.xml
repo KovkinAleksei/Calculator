@@ -13,6 +13,7 @@
     <color name="resultColor">#D0BCFF</color>
     <color name="buttonColor">#4A4458</color>
     <color name="accentButtonColor">#633B48</color>
+    <color name="memoryColor">#5B5569</color>
 
 
 </resources>
