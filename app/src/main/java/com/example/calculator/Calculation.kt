@@ -25,11 +25,11 @@ class Calculation {
         // Разделение числа на целую и дробную части
         var strResult = String.format("%.8f", result)
 
-        val first = strResult.split('.')[0].trimEnd('0')
-        val second = strResult.split(',')[0].trimEnd('0')
+        val firstSplit = strResult.split('.')[0].trimEnd('0')
+        val secondSplit = strResult.split(',')[0].trimEnd('0')
 
         // Ошибка вывода слишком длинного числа
-        if ((first.length > 10 && second.length > 10) || abs(result) > 999999999) {
+        if ((firstSplit.length > 10 && secondSplit.length > 10) || abs(result) > 999999999) {
             hasError = true
             return ERROR_MESSAGE
         }
@@ -105,7 +105,7 @@ class Calculation {
     // Добавление разделителя целой и дробной части
     fun addComma() : String {
         // Обновление строки, запоминающей ввод
-        if (resultIsPrinted) {
+        if (resultIsPrinted && !hasError) {
             memoryString = ""
             resultIsPrinted = false
         }
