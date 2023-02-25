@@ -14,7 +14,7 @@ class MainActivity : AppCompatActivity() {
     fun addDigit(view: View) {
         with (view as Button) {
             binding.result.text = calculation.addDigit(view.text.toString())
-            binding.memory.text = calculation.memoryString
+            binding.memory.text = calculation.getMemoryStr()
 
             // Отмена цвета ошибки
             binding.result.setTextColor(getResources().getColor(R.color.resultColor))
@@ -25,10 +25,10 @@ class MainActivity : AppCompatActivity() {
     fun addOperation(view: View) {
         with (view as Button) {
             binding.result.text = calculation.addOperation(view.text.toString())
-            binding.memory.text = calculation.memoryString
+            binding.memory.text = calculation.getMemoryStr()
 
             // Установка цвета ошибки
-            if (binding.result.text.toString() == "Error") {
+            if (binding.result.text.toString() == Calculation.ERROR_MESSAGE) {
                 binding.result.setTextColor(getResources().getColor(R.color.errorColor))
             }
         }
@@ -56,10 +56,10 @@ class MainActivity : AppCompatActivity() {
         // Нажатие на кнопку равно
         binding.equalsButton.setOnClickListener {
             binding.result.text = calculation.showResult()
-            binding.memory.text = calculation.memoryString
+            binding.memory.text = calculation.getMemoryStr()
 
             // Установка цвета ошибки
-            if (binding.result.text.toString() == "Error") {
+            if (binding.result.text.toString() == Calculation.ERROR_MESSAGE) {
                 binding.result.setTextColor(getResources().getColor(R.color.errorColor))
             }
         }
@@ -67,7 +67,7 @@ class MainActivity : AppCompatActivity() {
         // Нажатие на кнопку AC
         binding.resetButton.setOnClickListener {
             binding.result.text = calculation.reset()
-            binding.memory.text = calculation.memoryString
+            binding.memory.text = calculation.getMemoryStr()
 
             // Отмена цвета ошибки
             binding.result.setTextColor(getResources().getColor(R.color.resultColor))
@@ -76,16 +76,16 @@ class MainActivity : AppCompatActivity() {
         // Нажатие на кнопку плюс-минус
         binding.plusMinusButton.setOnClickListener {
             binding.result.text = calculation.changeSign()
-            binding.memory.text = calculation.memoryString
+            binding.memory.text = calculation.getMemoryStr()
         }
 
         // Нажатие на кнопку процента
         binding.percentButton.setOnClickListener {
             binding.result.text = calculation.getPercent()
-            binding.memory.text = calculation.memoryString
+            binding.memory.text = calculation.getMemoryStr()
 
             // Установка цвета ошибки
-            if (binding.result.text.toString() == "Error") {
+            if (binding.result.text.toString() == Calculation.ERROR_MESSAGE) {
                 binding.result.setTextColor(getResources().getColor(R.color.errorColor))
             }
         }
@@ -93,7 +93,7 @@ class MainActivity : AppCompatActivity() {
         // Нажатие на кнопку удаления последнего символа
         binding.eraseButton.setOnClickListener {
             binding.result.text = calculation.erase(binding.result.text.toString())
-            binding.memory.text = calculation.memoryString
+            binding.memory.text = calculation.getMemoryStr()
 
             // Отмена цвета ошибки
             binding.result.setTextColor(getResources().getColor(R.color.resultColor))
@@ -102,7 +102,7 @@ class MainActivity : AppCompatActivity() {
         // Нажатие на кнопку разделения целой и дробной части числа
         binding.commaButton.setOnClickListener {
             binding.result.text = calculation.addComma()
-            binding.memory.text = calculation.memoryString
+            binding.memory.text = calculation.getMemoryStr()
         }
     }
 }

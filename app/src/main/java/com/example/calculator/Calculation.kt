@@ -9,7 +9,7 @@ class Calculation {
     private var operation = ""
     private var hasError = false
     private var resultIsPrinted = false
-    public var memoryString = ""
+    private var memoryString = ""
 
     // Сообщение об ошибке
     companion object {
@@ -208,7 +208,7 @@ class Calculation {
             currentNumber = currentNumber.replace(',', '.')
             currentNumber = doubleToString(currentNumber.toDouble() * (-1))
 
-            if (operation == "=")
+            if (operation == "=" || operation == "")
                 result *= -1
 
             return currentNumber
@@ -281,7 +281,7 @@ class Calculation {
         if (resultString.length == 1 || (resultString.length == 2 && resultString[0] == '-')) {
             currentNumber = "0"
 
-            if (operation == "=")
+            if (operation == "=" || operation == "")
                 result = 0.0
 
             return currentNumber
@@ -303,6 +303,9 @@ class Calculation {
 
             if (currentNumber == "-0")
                 currentNumber = "0"
+
+            currentNumber = currentNumber.replace(',', '.')
+            result = currentNumber.toDouble()
 
             return currentNumber
         }
@@ -333,5 +336,10 @@ class Calculation {
         }
 
         return doubleToString(result)
+    }
+
+    // Возврат строки, запоминающей ввод
+    fun getMemoryStr() : String {
+        return memoryString
     }
 }
