@@ -15,6 +15,9 @@ class MainActivity : AppCompatActivity() {
         with (view as Button) {
             binding.result.text = calculation.addDigit(view.text.toString())
             binding.memory.text = calculation.memoryString
+
+            // Отмена цвета ошибки
+            binding.result.setTextColor(getResources().getColor(R.color.resultColor))
         }
     }
 
@@ -23,6 +26,11 @@ class MainActivity : AppCompatActivity() {
         with (view as Button) {
             binding.result.text = calculation.addOperation(view.text.toString())
             binding.memory.text = calculation.memoryString
+
+            // Установка цвета ошибки
+            if (binding.result.text.toString() == "Error") {
+                binding.result.setTextColor(getResources().getColor(R.color.errorColor))
+            }
         }
     }
 
@@ -49,12 +57,20 @@ class MainActivity : AppCompatActivity() {
         binding.equalsButton.setOnClickListener {
             binding.result.text = calculation.showResult()
             binding.memory.text = calculation.memoryString
+
+            // Установка цвета ошибки
+            if (binding.result.text.toString() == "Error") {
+                binding.result.setTextColor(getResources().getColor(R.color.errorColor))
+            }
         }
 
         // Нажатие на кнопку AC
         binding.resetButton.setOnClickListener {
             binding.result.text = calculation.reset()
             binding.memory.text = calculation.memoryString
+
+            // Отмена цвета ошибки
+            binding.result.setTextColor(getResources().getColor(R.color.resultColor))
         }
 
         // Нажатие на кнопку плюс-минус
@@ -67,12 +83,20 @@ class MainActivity : AppCompatActivity() {
         binding.percentButton.setOnClickListener {
             binding.result.text = calculation.getPercent()
             binding.memory.text = calculation.memoryString
+
+            // Установка цвета ошибки
+            if (binding.result.text.toString() == "Error") {
+                binding.result.setTextColor(getResources().getColor(R.color.errorColor))
+            }
         }
 
         // Нажатие на кнопку удаления последнего символа
         binding.eraseButton.setOnClickListener {
             binding.result.text = calculation.erase(binding.result.text.toString())
             binding.memory.text = calculation.memoryString
+
+            // Отмена цвета ошибки
+            binding.result.setTextColor(getResources().getColor(R.color.resultColor))
         }
 
         // Нажатие на кнопку разделения целой и дробной части числа
