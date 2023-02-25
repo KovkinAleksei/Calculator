@@ -2,11 +2,30 @@ package com.example.calculator
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
+import android.widget.Button
 import com.example.calculator.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private var calculation = Calculation()
+
+    // Добавление введённой цифры
+    fun addDigit(view: View) {
+        with (view as Button) {
+            binding.result.text = calculation.addDigit(view.text.toString())
+            binding.memory.text = calculation.memoryString
+        }
+    }
+
+    // Добавление введённой операции
+    fun addOperation(view: View) {
+        with (view as Button) {
+            binding.result.text = calculation.addOperation(view.text.toString())
+            binding.memory.text = calculation.memoryString
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -15,102 +34,15 @@ class MainActivity : AppCompatActivity() {
         val view = binding.root
         setContentView(view)
 
-        // Нажатие на кнопку 0
-        binding.button0.setOnClickListener{
-            val digit = binding.button0.text.toString()
-            binding.result.text = calculation.addDigit(digit)
-            binding.memory.text = calculation.memoryString
+        // Нажатие на кнопки 0-9
+        listOf(binding.button0, binding.button1, binding.button2, binding.button3, binding.button4,
+        binding.button4, binding.button5, binding.button6, binding.button7, binding.button8, binding.button9).forEach {
+            it.setOnClickListener(::addDigit)
         }
 
-        // Нажатие на кнопку 1
-        binding.button1.setOnClickListener{
-            val digit = binding.button1.text.toString()
-            binding.result.text = calculation.addDigit(digit)
-            binding.memory.text = calculation.memoryString
-        }
-
-        // Нажатие на кнопку 2
-        binding.button2.setOnClickListener{
-            val digit = binding.button2.text.toString()
-            binding.result.text = calculation.addDigit(digit)
-            binding.memory.text = calculation.memoryString
-        }
-
-        // Нажатие на кнопку 3
-        binding.button3.setOnClickListener{
-            val digit = binding.button3.text.toString()
-            binding.result.text = calculation.addDigit(digit)
-            binding.memory.text = calculation.memoryString
-        }
-
-        // Нажатие на кнопку 4
-        binding.button4.setOnClickListener{
-            val digit = binding.button4.text.toString()
-            binding.result.text = calculation.addDigit(digit)
-            binding.memory.text = calculation.memoryString
-        }
-
-        // Нажатие на кнопку 5
-        binding.button5.setOnClickListener{
-            val digit = binding.button5.text.toString()
-            binding.result.text = calculation.addDigit(digit)
-            binding.memory.text = calculation.memoryString
-        }
-
-        // Нажатие на кнопку 6
-        binding.button6.setOnClickListener{
-            val digit = binding.button6.text.toString()
-            binding.result.text = calculation.addDigit(digit)
-            binding.memory.text = calculation.memoryString
-        }
-
-        // Нажатие на кнопку 7
-        binding.button7.setOnClickListener{
-            val digit = binding.button7.text.toString()
-            binding.result.text = calculation.addDigit(digit)
-            binding.memory.text = calculation.memoryString
-        }
-
-        // Нажатие на кнопку 8
-        binding.button8.setOnClickListener{
-            val digit = binding.button8.text.toString()
-            binding.result.text = calculation.addDigit(digit)
-            binding.memory.text = calculation.memoryString
-        }
-
-        // Нажатие на кнопку 9
-        binding.button9.setOnClickListener{
-            val digit = binding.button9.text.toString()
-            binding.result.text = calculation.addDigit(digit)
-            binding.memory.text = calculation.memoryString
-        }
-
-        // Нажатие на кнопку сложения
-        binding.plusButton.setOnClickListener {
-            val sign = binding.plusButton.text.toString()
-            binding.result.text = calculation.addOperation(sign)
-            binding.memory.text = calculation.memoryString
-        }
-
-        // Нажатие на кнопку вычитания
-        binding.minusButton.setOnClickListener {
-            val sign = binding.minusButton.text.toString()
-            binding.result.text = calculation.addOperation(sign)
-            binding.memory.text = calculation.memoryString
-        }
-
-        // Нажатие на кнопку умножения
-        binding.multiplyButton.setOnClickListener {
-            val sign = binding.multiplyButton.text.toString()
-            binding.result.text = calculation.addOperation(sign)
-            binding.memory.text = calculation.memoryString
-        }
-
-        // Нажатие на кнопку деления
-        binding.divideButton.setOnClickListener {
-            val sign = binding.divideButton.text.toString()
-            binding.result.text = calculation.addOperation(sign)
-            binding.memory.text = calculation.memoryString
+        // Нажатие на кнопки +, -, *, /
+        listOf(binding.minusButton, binding.plusButton, binding.multiplyButton, binding.divideButton).forEach {
+            it.setOnClickListener(::addOperation)
         }
 
         // Нажатие на кнопку равно
