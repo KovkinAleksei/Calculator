@@ -11,21 +11,23 @@ class Calculation {
 
     // Сообщение об ошибке
     companion object {
-        val ERROR_MESSAGE = "error"
+        val ERROR_MESSAGE = "Error"
     }
 
     // Перевод Double в String для вывода результата
     private fun doubleToString(result: Double) : String {
         // Вывод нуля без минуса
-        if (result.toString() == "-0.0")
+        if (result.toString() == "-0.0" || result.toString() == "-0,0")
             return "0"
 
         // Разделение числа на целую и дробную части
         var strResult = String.format("%.8f", result)
-        val resultParts = strResult.split('.')
+
+        val first = strResult.split('.')[0].trimEnd('0')
+        val second = strResult.split(',')[0].trimEnd('0')
 
         // Ошибка вывода слишком длинного числа
-        if (resultParts[0].length > 9 || abs(result) > 999999999) {
+        if ((first.length > 10 && second.length > 10) || abs(result) > 999999999) {
             hasError = true
             return ERROR_MESSAGE
         }
@@ -39,7 +41,7 @@ class Calculation {
         strResult = strResult.trimEnd('0')
 
         // Удаление лишнего разделителя целой и дробной части
-        if (strResult[strResult.length - 1] == '.')
+        if (strResult[strResult.length - 1] == '.' || strResult[strResult.length - 1] == ',')
             strResult = strResult.removeRange(strResult.length - 1.. strResult.length - 1)
 
         return strResult
@@ -59,8 +61,10 @@ class Calculation {
         if (currentNumber.length < 9)
             currentNumber += digit
 
-        if (prevNumber == "" || operation == "=")
+        if (prevNumber == "" || operation == "=") {
+            currentNumber = currentNumber.replace(',', '.')
             result = currentNumber.toDouble()
+        }
 
         return currentNumber
     }
@@ -93,7 +97,7 @@ class Calculation {
             return ERROR_MESSAGE
 
         // Добавление разделителя
-        if (currentNumber != "" && currentNumber.split('.').count() == 1) {
+        if (currentNumber != "" && currentNumber.split('.').count() == 1 && currentNumber.split(',').count() == 1) {
             currentNumber += '.'
             return currentNumber
         }
@@ -111,13 +115,16 @@ class Calculation {
     // Нахождение результата выражения
     private fun getResult(operation: String) {
         if (prevNumber == "") {
+            currentNumber = currentNumber.replace(',', '.')
             result = currentNumber.toDouble()
             return
         }
 
-        if ((currentNumber == "0" || currentNumber == "0.0") && operation == "÷")
+        if ((currentNumber == "0" || currentNumber == "0.0" || currentNumber == "0,0") && operation == "÷")
             hasError = true
         else if (currentNumber != "" && operation != "=") {
+            currentNumber = currentNumber.replace(',', '.')
+
             result = when (operation) {
                 "+" -> result + currentNumber.toDouble()
                 "-" -> result - currentNumber.toDouble()
@@ -163,6 +170,7 @@ class Calculation {
 
         // Смена знака последнего введённого числа
         if (currentNumber != "") {
+            currentNumber = currentNumber.replace(',', '.')
             currentNumber = doubleToString(currentNumber.toDouble() * (-1))
 
             if (operation == "=")
@@ -185,7 +193,10 @@ class Calculation {
         }
 
         // Пропуск нажатия кнопки
-        return doubleToString(result) + operation
+        if (operation != "=")
+            return doubleToString(result) + operation
+
+        return doubleToString(result)
     }
 
     // Взятие процента от числа
@@ -203,6 +214,7 @@ class Calculation {
         }
 
         // Умножение или деление результата на процент
+        currentNumber = currentNumber.replace(',', '.')
         currentNumber = (currentNumber.toDouble() * 0.01).toString()
 
         // Сложение или вычитание результата и процента
@@ -231,7 +243,7 @@ class Calculation {
         }
 
         // Удаление разделителя целой и дробной части числа
-        if (resultString[resultString.length - 1] == '.') {
+        if (resultString[resultString.length - 1] == '.' || resultString[resultString.length - 1] == ',') {
             currentNumber = currentNumber.removeRange(currentNumber.length - 1..currentNumber.length - 1)
 
             return currentNumber
@@ -241,7 +253,7 @@ class Calculation {
         if (currentNumber != "" && operation != "=") {
             currentNumber = currentNumber.removeRange(currentNumber.length - 1..currentNumber.length - 1)
 
-            if (currentNumber[currentNumber.length - 1] == '.')
+            if (currentNumber[currentNumber.length - 1] == '.' || currentNumber[currentNumber.length - 1] == ',')
                 currentNumber = currentNumber.removeRange(currentNumber.length - 1..currentNumber.length -1)
 
             if (currentNumber == "-0")
@@ -261,10 +273,11 @@ class Calculation {
             var strResult = doubleToString(result)
             var newResult = strResult.removeRange(strResult.length - 1..strResult.length - 1)
 
-            if (newResult[newResult.length - 1] == '.')
+            if (newResult[newResult.length - 1] == '.' || newResult[newResult.length - 1] == ',')
                  newResult = newResult.removeRange(newResult.length - 1..newResult.length - 1)
 
             currentNumber = newResult
+            newResult = newResult.replace(',', '.')
             result = newResult.toDouble()
         }
 
