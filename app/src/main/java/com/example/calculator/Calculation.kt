@@ -121,11 +121,11 @@ class Calculation {
         }
 
         // Пропуск добавления разделителя
-        if (operation != "=" && operation != "")
-            return doubleToString(result) + operation
-
         if (currentNumber != "")
             return currentNumber
+
+        if (operation != "=" && operation != "")
+            return doubleToString(result) + operation
 
         return doubleToString(result)
     }
