@@ -138,7 +138,7 @@ class Calculation {
             return
         }
 
-        if ((doubleToString(currentNumber.toDouble()) == "0") && operation == "÷")
+        if (currentNumber != "" && (doubleToString(currentNumber.replace(',', '.').toDouble()) == "0") && operation == "÷")
             hasError = true
         else if (currentNumber != "" && operation != "=") {
             currentNumber = currentNumber.replace(',', '.')
