@@ -83,8 +83,10 @@ class Calculation {
         getResult(this.operation)
 
         // Вывод сообщения об ошибке
-        if (hasError)
+        if (hasError) {
+            memoryString = doubleToString(result) + " " + this.operation + " " + currentNumber + " ="
             return ERROR_MESSAGE
+        }
 
         // Вывод выбранной операции
         this.operation = operation
