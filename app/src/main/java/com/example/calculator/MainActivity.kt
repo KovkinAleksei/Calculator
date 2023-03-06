@@ -35,8 +35,21 @@ class MainActivity : AppCompatActivity() {
         }
 
         // Нажатие на кнопки +, -, *, /
+        val operation = mapOf(binding.minusButton to "-", binding.plusButton to "+", binding.multiplyButton to "×", binding.divideButton to "÷")
+
         listOf(binding.minusButton, binding.plusButton, binding.multiplyButton, binding.divideButton).forEach {
-            it.setOnClickListener(::addOperation)
+            it.setOnClickListener(object: View.OnClickListener {
+                override fun onClick(v: View?) {
+                    // Добавление введённой операции
+                    binding.result.text = calculation.addOperation(operation.getValue(it))
+                    binding.memory.text = calculation.getMemoryStr()
+
+                    // Установка цвета ошибки
+                    if (binding.result.text.toString() == Calculation.ERROR_MESSAGE) {
+                        binding.result.setTextColor(getResources().getColor(R.color.errorColor))
+                    }
+                }
+            })
         }
 
         // Нажатие на кнопку равно
@@ -89,19 +102,6 @@ class MainActivity : AppCompatActivity() {
         binding.commaButton.setOnClickListener {
             binding.result.text = calculation.addComma()
             binding.memory.text = calculation.getMemoryStr()
-        }
-    }
-
-    // Добавление введённой операции
-    private fun addOperation(view: View) {
-        with (view as Button) {
-            binding.result.text = calculation.addOperation(view.text.toString())
-            binding.memory.text = calculation.getMemoryStr()
-
-            // Установка цвета ошибки
-            if (binding.result.text.toString() == Calculation.ERROR_MESSAGE) {
-                binding.result.setTextColor(getResources().getColor(R.color.errorColor))
-            }
         }
     }
 }
