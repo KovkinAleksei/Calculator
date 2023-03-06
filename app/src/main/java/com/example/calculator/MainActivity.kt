@@ -20,8 +20,18 @@ class MainActivity : AppCompatActivity() {
 
         // Нажатие на кнопки 0-9
         listOf(binding.button0, binding.button1, binding.button2, binding.button3, binding.button4,
-        binding.button4, binding.button5, binding.button6, binding.button7, binding.button8, binding.button9).forEach {
-            it.setOnClickListener(::addDigit)
+            binding.button5, binding.button6, binding.button7, binding.button8, binding.button9).forEachIndexed {
+            index, element -> element.setOnClickListener(object: View.OnClickListener {
+
+                // Добавление введённой цифры
+                override fun onClick(v: View?) {
+                    binding.result.text = calculation.addDigit(index.toString())
+                    binding.memory.text = calculation.getMemoryStr()
+
+                    // Отмена цвета ошибки
+                    binding.result.setTextColor(getResources().getColor(R.color.resultColor))
+                }
+            })
         }
 
         // Нажатие на кнопки +, -, *, /
@@ -79,17 +89,6 @@ class MainActivity : AppCompatActivity() {
         binding.commaButton.setOnClickListener {
             binding.result.text = calculation.addComma()
             binding.memory.text = calculation.getMemoryStr()
-        }
-    }
-
-    // Добавление введённой цифры
-    private fun addDigit(view: View) {
-        with (view as Button) {
-            binding.result.text = calculation.addDigit(view.text.toString())
-            binding.memory.text = calculation.getMemoryStr()
-
-            // Отмена цвета ошибки
-            binding.result.setTextColor(getResources().getColor(R.color.resultColor))
         }
     }
 
