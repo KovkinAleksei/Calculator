@@ -10,30 +10,6 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private var calculation = Calculation()
 
-    // Добавление введённой цифры
-    fun addDigit(view: View) {
-        with (view as Button) {
-            binding.result.text = calculation.addDigit(view.text.toString())
-            binding.memory.text = calculation.getMemoryStr()
-
-            // Отмена цвета ошибки
-            binding.result.setTextColor(getResources().getColor(R.color.resultColor))
-        }
-    }
-
-    // Добавление введённой операции
-    fun addOperation(view: View) {
-        with (view as Button) {
-            binding.result.text = calculation.addOperation(view.text.toString())
-            binding.memory.text = calculation.getMemoryStr()
-
-            // Установка цвета ошибки
-            if (binding.result.text.toString() == Calculation.ERROR_MESSAGE) {
-                binding.result.setTextColor(getResources().getColor(R.color.errorColor))
-            }
-        }
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -103,6 +79,30 @@ class MainActivity : AppCompatActivity() {
         binding.commaButton.setOnClickListener {
             binding.result.text = calculation.addComma()
             binding.memory.text = calculation.getMemoryStr()
+        }
+    }
+
+    // Добавление введённой цифры
+    private fun addDigit(view: View) {
+        with (view as Button) {
+            binding.result.text = calculation.addDigit(view.text.toString())
+            binding.memory.text = calculation.getMemoryStr()
+
+            // Отмена цвета ошибки
+            binding.result.setTextColor(getResources().getColor(R.color.resultColor))
+        }
+    }
+
+    // Добавление введённой операции
+    private fun addOperation(view: View) {
+        with (view as Button) {
+            binding.result.text = calculation.addOperation(view.text.toString())
+            binding.memory.text = calculation.getMemoryStr()
+
+            // Установка цвета ошибки
+            if (binding.result.text.toString() == Calculation.ERROR_MESSAGE) {
+                binding.result.setTextColor(getResources().getColor(R.color.errorColor))
+            }
         }
     }
 }
