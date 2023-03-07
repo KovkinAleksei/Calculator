@@ -83,12 +83,6 @@ class Calculation {
         // Нахождение результата вычисления
         getResult(this.operation)
 
-        // Вывод сообщения об ошибке
-        if (hasError.value!!) {
-            memoryString.value = doubleToString(result) + " " + this.operation + " " + currentNumber + " ="
-            return ERROR_MESSAGE
-        }
-
         // Вывод выбранной операции
         this.operation = operation
 
@@ -99,10 +93,15 @@ class Calculation {
         }
 
         // Обновление строки, запоминающей ввод
-        memoryString.value = doubleToString(result) + " " + operation
-        resultIsPrinted = false
+        if (doubleToString(result) != ERROR_MESSAGE && !hasError.value!!) {
+            memoryString.value = "${doubleToString(result)} ${operation}"
+            resultIsPrinted = false
 
-       return doubleToString(result) + operation
+            return doubleToString(result) + operation
+        }
+
+        // Вывод сообщения об ошибке
+        return ERROR_MESSAGE
     }
 
     // Добавление разделителя целой и дробной части
