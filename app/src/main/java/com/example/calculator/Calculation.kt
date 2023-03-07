@@ -1,5 +1,6 @@
 package com.example.calculator
 
+import androidx.lifecycle.MutableLiveData
 import kotlin.math.abs
 
 class Calculation {
@@ -7,9 +8,9 @@ class Calculation {
     private var prevNumber = ""
     private var currentNumber = "0"
     private var operation = ""
-    private var hasError = false
+    private var hasError: MutableLiveData<Boolean> = MutableLiveData(false)
     private var resultIsPrinted = false
-    private var memoryString = ""
+    private var memoryString: MutableLiveData<String> = MutableLiveData("")
 
     // Сообщение об ошибке
     companion object {
@@ -30,7 +31,7 @@ class Calculation {
 
         // Ошибка вывода слишком длинного числа
         if ((firstSplit.length > 10 && secondSplit.length > 10) || abs(result) > 999999999) {
-            hasError = true
+            hasError.value = true
             return ERROR_MESSAGE
         }
 
@@ -53,12 +54,12 @@ class Calculation {
     fun addDigit(digit: String) : String {
         // Стререть строку с сохранённым вводом при введении нового выражения
         if (resultIsPrinted) {
-            memoryString = ""
+            memoryString.value = ""
             resultIsPrinted = false
         }
 
         // Отмена действий при вознокновении ошибки
-        if (hasError)
+        if (hasError.value!!)
             reset()
 
         // Удаление незначащих нулей
@@ -83,8 +84,8 @@ class Calculation {
         getResult(this.operation)
 
         // Вывод сообщения об ошибке
-        if (hasError) {
-            memoryString = doubleToString(result) + " " + this.operation + " " + currentNumber + " ="
+        if (hasError.value!!) {
+            memoryString.value = doubleToString(result) + " " + this.operation + " " + currentNumber + " ="
             return ERROR_MESSAGE
         }
 
@@ -98,7 +99,7 @@ class Calculation {
         }
 
         // Обновление строки, запоминающей ввод
-        memoryString = doubleToString(result) + " " + operation
+        memoryString.value = doubleToString(result) + " " + operation
         resultIsPrinted = false
 
        return doubleToString(result) + operation
@@ -107,13 +108,13 @@ class Calculation {
     // Добавление разделителя целой и дробной части
     fun addComma() : String {
         // Обновление строки, запоминающей ввод
-        if (resultIsPrinted && !hasError) {
-            memoryString = ""
+        if (resultIsPrinted && !hasError.value!!) {
+            memoryString.value = ""
             resultIsPrinted = false
         }
 
         // Вывод сообщения об ошибке
-        if (hasError)
+        if (hasError.value!!)
             return ERROR_MESSAGE
 
         // Добавление разделителя
@@ -141,7 +142,7 @@ class Calculation {
         }
 
         if (currentNumber != "" && (doubleToString(currentNumber.replace(',', '.').toDouble()) == "0") && operation == "÷")
-            hasError = true
+            hasError.value = true
         else if (currentNumber != "" && operation != "=") {
             currentNumber = currentNumber.replace(',', '.')
 
@@ -159,11 +160,11 @@ class Calculation {
     fun showResult() : String {
         // Обновление строки, запоминающей ввод
         if (operation != "=" && operation != "" && currentNumber != "") {
-            memoryString = doubleToString(result) + " " + operation + " " + currentNumber + " = "
+            memoryString.value = doubleToString(result) + " " + operation + " " + currentNumber + " = "
             resultIsPrinted = true
         }
         else if (!resultIsPrinted) {
-            memoryString = doubleToString(result) + " ="
+            memoryString.value = doubleToString(result) + " ="
             resultIsPrinted = true
         }
 
@@ -171,7 +172,7 @@ class Calculation {
         getResult(operation)
 
         // Вывод сообщения об ошибке
-        if (hasError)
+        if (hasError.value!!)
             return ERROR_MESSAGE
 
         // Вывод результата
@@ -187,8 +188,8 @@ class Calculation {
         prevNumber = ""
         currentNumber = "0"
         operation = ""
-        hasError = false
-        memoryString = ""
+        hasError.value = false
+        memoryString.value = ""
 
         return currentNumber
     }
@@ -196,12 +197,12 @@ class Calculation {
     // Смена знака введённого числа или операции
     fun changeSign() : String {
         // Вывод сообщения об ошибке
-        if (hasError)
+        if (hasError.value!!)
             return ERROR_MESSAGE
 
         // Обновление строки, запоминающей ввод
         if (resultIsPrinted && result != 0.0) {
-            memoryString = ""
+            memoryString.value = ""
             resultIsPrinted = false
         }
 
@@ -219,14 +220,14 @@ class Calculation {
         // Смена знака последней введённой операции
         if (operation == "-") {
             operation = "+"
-            memoryString = doubleToString(result) + " " + operation
+            memoryString.value = doubleToString(result) + " " + operation
 
             return doubleToString(result) + operation
         }
 
         if (operation == "+") {
             operation = "-"
-            memoryString = doubleToString(result) + " " + operation
+            memoryString.value = doubleToString(result) + " " + operation
 
             return doubleToString(result) + operation
         }
@@ -241,7 +242,7 @@ class Calculation {
     // Взятие процента от числа
     fun getPercent() : String {
         // Вывод сообщения об ошибке
-        if (hasError)
+        if (hasError.value!!)
             return ERROR_MESSAGE
 
         // Пропуск взятия процента, если не было введено предыдущее или текущее число
@@ -270,12 +271,12 @@ class Calculation {
     fun erase(resultString : String) : String {
         // Обновление строки, запоминающей ввод
         if (resultIsPrinted) {
-            memoryString = ""
+            memoryString.value = ""
             resultIsPrinted = false
         }
 
         // Отмена действий при возникновении ошибки
-        if (hasError) {
+        if (hasError.value!!) {
             return reset()
         }
 
@@ -318,7 +319,7 @@ class Calculation {
             currentNumber = doubleToString(result)
 
             // Обновление строки, запоминающей ввод
-            memoryString = ""
+            memoryString.value = ""
             resultIsPrinted = false
 
             return doubleToString(result)
@@ -341,7 +342,12 @@ class Calculation {
     }
 
     // Возврат строки, запоминающей ввод
-    fun getMemoryStr() : String {
+    fun getMemoryStr() : MutableLiveData<String> {
         return memoryString
+    }
+
+    // Возврат ошибки
+    fun getError() : MutableLiveData<Boolean> {
+        return hasError
     }
 }
