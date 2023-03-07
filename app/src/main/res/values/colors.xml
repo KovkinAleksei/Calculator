@@ -7,4 +7,14 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="dark">#1D1B1E</color>
+    <color name="appNameColor">#E6E1E5</color>
+    <color name="dividerColor">#49454F</color>
+    <color name="resultColor">#D0BCFF</color>
+    <color name="buttonColor">#4A4458</color>
+    <color name="accentButtonColor">#633B48</color>
+    <color name="memoryColor">#5B5569</color>
+    <color name="errorColor">#F2B8B5</color>
+
+
 </resources>
